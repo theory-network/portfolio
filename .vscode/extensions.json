@@ -1,9 +1,35 @@
 {
   "recommendations": [
     "nrwl.angular-console",
+    "angular.ng-template",
+    "ms-vscode.vscode-typescript-tslint-plugin",
     "esbenp.prettier-vscode",
+    "msjsdiag.debugger-for-chrome",
+    "christian-kohler.path-intellisense",
+    "natewallace.angular2-inline",
+    "glen-84.sass-lint",
+    "PKief.material-icon-theme",
+    "eamodio.gitlens",
+    "oderwat.indent-rainbow",
+    "quicktype.quicktype",
+    "shan.code-settings-sync",
+    "github.vscode-pull-request-github",
+    "vscodevim.vim",
+    "wix.vscode-import-cost",
+    "aaron-bond.better-comments",
+    "vincaslt.highlight-matching-tag",
+    "funkyremi.vscode-google-translate",
+    "cssho.vscode-svgviewer",
+    "donjayamanne.githistory",
+    "Orta.vscode-jest",
+    "CoenraadS.bracket-pair-colorizer-2",
+    "mhutchie.git-graph",
+    "humao.rest-client",
+    "pnp.polacode",
+    "wayou.vscode-todo-highlight",
+    "firsttris.vscode-jest-runner",
     "dbaeumer.vscode-eslint",
-    "ms-playwright.playwright",
-    "firsttris.vscode-jest-runner"
+    "ms-vscode-remote.remote-ssh",
+    "ms-playwright.playwright"
   ]
 }
