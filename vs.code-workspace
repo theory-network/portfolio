@@ -1,0 +1,47 @@
+{
+  "folders": [{ "path": "." }],
+  "settings": {
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "window.zoomLevel": 0,
+    "html.format.wrapAttributes": "force-aligned",
+    "html.format.wrapLineLength": 80,
+    "files.eol": "\n",
+    "search.exclude": {
+      "**/node_modules": true
+    },
+    "workbench.colorCustomizations": {
+      "activityBar.background": "#378de7",
+      "activityBar.activeBackground": "#378de7",
+      "activityBar.activeBorder": "#25320e",
+      "activityBar.foreground": "#e7e7e7",
+      "activityBar.inactiveForeground": "#e7e7e799",
+      "activityBarBadge.background": "#ab145e",
+      "activityBarBadge.foreground": "#e7e7e7",
+      "titleBar.activeBackground": "#1973d2",
+      "titleBar.inactiveBackground": "#1973d299",
+      "titleBar.activeForeground": "#e7e7e7",
+      "titleBar.inactiveForeground": "#e7e7e799",
+      "statusBar.background": "#1973d2",
+      "statusBarItem.hoverBackground": "#378de7",
+      "statusBar.foreground": "#e7e7e7",
+      "sash.hoverBorder": "#378de7",
+      "statusBarItem.remoteBackground": "#1973d2",
+      "statusBarItem.remoteForeground": "#e7e7e7",
+      "commandCenter.border": "#e7e7e799"
+    },
+    "peacock.color": "#1973D2",
+    "nxConsole.nxWorkspacePath": "frontend",
+    "rest-client.environmentVariables": {
+      "$shared": {
+        "version": "v1"
+      },
+      "local": {
+        "host": "http://localhost:8080",
+        "token": ""
+      }
+    },
+    "java.compile.nullAnalysis.mode": "disabled",
+    "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python"
+  }
+}
