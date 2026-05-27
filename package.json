@@ -6,6 +6,7 @@
   "private": true,
   "dependencies": {
     "express": "^4.21.2",
+    "next": "~16.1.6",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-router-dom": "6.30.3"
@@ -20,6 +21,7 @@
     "@nx/eslint": "22.7.2",
     "@nx/eslint-plugin": "22.7.2",
     "@nx/js": "22.7.2",
+    "@nx/next": "^22.7.2",
     "@nx/node": "22.7.2",
     "@nx/playwright": "22.7.2",
     "@nx/react": "22.7.2",
