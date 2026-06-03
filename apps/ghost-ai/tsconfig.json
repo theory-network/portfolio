@@ -1,5 +1,5 @@
 {
-  "extends": "../tsconfig.base.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "jsx": "preserve",
     "noEmit": true,
@@ -29,8 +29,8 @@
     "src/**/*.tsx",
     "src/**/*.js",
     "src/**/*.jsx",
-    "../api/.next/types/**/*.ts",
-    "../dist/api/.next/types/**/*.ts",
+    "../../apps/ghost-ai/.next/types/**/*.ts",
+    "../../dist/apps/ghost-ai/.next/types/**/*.ts",
     "next-env.d.ts"
   ],
   "exclude": [

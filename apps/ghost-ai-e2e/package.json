@@ -1,10 +1,10 @@
 {
-  "name": "@org/api-e2e",
+  "name": "@org/ghost-ai-e2e",
   "version": "0.0.1",
   "private": true,
   "nx": {
     "implicitDependencies": [
-      "@org/api"
+      "@org/ghost-ai"
     ]
   }
 }

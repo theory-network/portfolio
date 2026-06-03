@@ -5,13 +5,13 @@ const createJestConfig = nextJest({
 });
 
 const config = {
-  displayName: '@org/api',
-  preset: '../jest.preset.js',
+  displayName: '@org/ghost-ai',
+  preset: '../../jest.preset.js',
   transform: {
     '^(?!.*\\.(js|jsx|ts|tsx|css|json)$)': '@nx/react/plugins/jest',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../coverage/api',
+  coverageDirectory: '../../coverage/apps/ghost-ai',
   testEnvironment: 'jsdom',
 };
 
