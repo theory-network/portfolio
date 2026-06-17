@@ -16,6 +16,7 @@
     "@babel/preset-react": "^7.14.5",
     "@eslint/js": "^9.8.0",
     "@next/eslint-plugin-next": "^16.1.6",
+    "@nx-extend/shadcn-ui": "^6.2.3",
     "@nx/devkit": "22.7.2",
     "@nx/docker": "22.7.2",
     "@nx/esbuild": "22.7.2",
