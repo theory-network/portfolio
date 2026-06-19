@@ -1,3 +1,1 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import '../../../../libs/shadcn-util/src/global.css';

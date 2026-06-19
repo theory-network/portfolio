@@ -18,10 +18,8 @@
     "target": "es2022",
     "customConditions": ["@org/source"],
     "paths": {
-      "@org/shadcn": ["libs/shadcn/src"],
-      "@org/shadcn-util": ["libs/shadcn-util/src"],
-      "@org/shadcn/*": ["libs/shadcn/src/*"],
-      "@org/shadcn-util/*": ["libs/shadcn-util/src/*"]
+      "@org/shadcn": ["./libs/shadcn/src/index.ts"],
+      "@org/shadcn-util": ["./libs/shadcn-util/src/index.ts"]
     }
   }
 }

@@ -9,19 +9,19 @@
 // If you are **not** using `--turbo` you can uncomment both lines 1 & 19.
 // A discussion of the issue can be found: https://github.com/nrwl/nx/issues/26510
 
-import { buildConfig } from '../../libs/shadcn-util/src/tailwind.config';
+import { createGlobPatternsForDependencies } from '@nx/react/tailwind';
+import { join } from 'node:path';
 
-export default buildConfig(__dirname);
+const TailwindConfig = require('../../libs/shadcn-util/tailwind.config.js');
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    './{src,pages,components,app}/**/*.{ts,tsx,js,jsx,html}',
-    '!./{src,pages,components,app}/**/*.{stories,spec}.{ts,tsx,js,jsx,html}',
-    //     ...createGlobPatternsForDependencies(__dirname)
+    join(
+      __dirname,
+      '{src,pages,components,app}/**/*!(*.stories|*.spec).{ts,tsx,html}',
+    ),
+    ...createGlobPatternsForDependencies(__dirname),
   ],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
+  ...TailwindConfig,
 };
