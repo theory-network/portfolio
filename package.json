@@ -2,7 +2,9 @@
   "name": "@org/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "ghost-ai-serve": "npx nx dev ghost-ai"
+  },
   "private": true,
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.17",

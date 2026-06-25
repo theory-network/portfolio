@@ -4,15 +4,15 @@ Update this file whenever the current phase, active feature, or implementation s
 
 ## Current Phase
 
-- Not started
+- Design system and UI primitive components
 
 ## Current Goal
 
-- Define the immediate implementation goal here.
+- Implement `01-design-system.md`: ensure shadcn primitives exist, lucide-react is installed, and components match the existing dark theme.
 
 ## Completed
 
-- None yet.
+- Design system / UI primitive components (`context/feature-specs/01-design-system.md`): Button, Card, Dialog, Input, Tabs, Textarea, ScrollArea already present in `libs/shadcn/src`; `lucide-react` installed; applied `dark` class to `<html>` in `apps/ghost-ai/src/app/layout.tsx` so the existing dark theme in `global.css` is active by default (verified via dev server response, no default light styling).
 
 ## In Progress
 
