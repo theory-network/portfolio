@@ -15,5 +15,8 @@
     {
       "path": "./libs/shadcn-util"
     }
-  ]
+  ],
+  "compilerOptions": {
+    "ignoreDeprecations": "6.0"
+  }
 }

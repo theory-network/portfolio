@@ -20,6 +20,10 @@
     "paths": {
       "@org/shadcn": ["./libs/shadcn/src/index.ts"],
       "@org/shadcn-util": ["./libs/shadcn-util/src/index.ts"]
-    }
+    },
+    "noUncheckedSideEffectImports": false,
+    "types": ["*"],
+    "esModuleInterop": false,
+    "ignoreDeprecations": "6.0"
   }
 }
