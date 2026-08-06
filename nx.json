@@ -102,11 +102,6 @@
     }
   ],
   "targetDefaults": {
-    "build": {
-      "options": {
-        "useLegacyTypescriptPlugin": true
-      }
-    },
     "test": {
       "dependsOn": ["^build"]
     },
