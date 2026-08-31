@@ -5,7 +5,9 @@
     "emitDeclarationOnly": true,
     "importHelpers": true,
     "isolatedModules": true,
-    "lib": ["es2022"],
+    "lib": [
+      "es2022"
+    ],
     "module": "nodenext",
     "moduleResolution": "nodenext",
     "noEmitOnError": true,
@@ -16,8 +18,26 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "es2022",
-    "customConditions": ["@org/source"],
+    "customConditions": [
+      "@org/source"
+    ],
     "noUncheckedSideEffectImports": false,
-    "types": ["*"]
+    "types": [
+      "*"
+    ],
+    "paths": {
+      "@shadcn/components": [
+        "./libs/shadcn/src/components/index.ts"
+      ],
+      "@shadcn/util": [
+        "./libs/shadcn/src/util/index.ts"
+      ],
+      "@shadcn/hooks": [
+        "./libs/shadcn/src/hooks"
+      ],
+      "@shadcn": [
+        "./libs/shadcn/src/components"
+      ]
+    }
   }
 }
