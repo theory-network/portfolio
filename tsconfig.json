@@ -5,6 +5,9 @@
   "references": [
     {
       "path": "./libs/shadcn"
+    },
+    {
+      "path": "./libs/nexus-core"
     }
   ],
   "compilerOptions": {}
