@@ -1,8 +1,8 @@
 module.exports = {
   displayName: 'nexus-mobile',
-  preset: '../jest.preset.js',
+  preset: '../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../coverage/nexus-mobile',
+  coverageDirectory: '../../coverage/apps/nexus-mobile',
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',
