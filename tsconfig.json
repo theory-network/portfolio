@@ -1,14 +1,6 @@
 {
   "extends": "./tsconfig.base.json",
   "compileOnSave": false,
-  "files": [],
-  "references": [
-    {
-      "path": "./libs/shadcn"
-    },
-    {
-      "path": "./libs/nexus-core"
-    }
-  ],
-  "compilerOptions": {}
+  "compilerOptions": {},
+  "exclude": ["node_modules", "tmp"]
 }

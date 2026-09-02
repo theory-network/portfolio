@@ -7,6 +7,13 @@
   "targets": {
     "add-component": {
       "executor": "@nx-extend/shadcn-ui:add"
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "libs/shadcn",
+        "command": "tsc -p tsconfig.lib.json --noEmit"
+      }
     }
   }
 }

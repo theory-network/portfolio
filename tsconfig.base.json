@@ -1,8 +1,5 @@
 {
   "compilerOptions": {
-    "composite": true,
-    "declarationMap": true,
-    "emitDeclarationOnly": true,
     "importHelpers": true,
     "isolatedModules": true,
     "lib": [
@@ -18,9 +15,6 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "es2022",
-    "customConditions": [
-      "@org/source"
-    ],
     "noUncheckedSideEffectImports": false,
     "types": [
       "*"
@@ -37,6 +31,9 @@
       ],
       "@shadcn": [
         "./libs/shadcn/src/components"
+      ],
+      "@theory/nexus-core": [
+        "./libs/nexus-core/src/index.ts"
       ]
     }
   }

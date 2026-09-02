@@ -16,5 +16,25 @@
   },
   "dependencies": {
     "tslib": "^2.3.0"
+  },
+  "nx": {
+    "targets": {
+      "build": {
+        "executor": "@nx/js:tsc",
+        "outputs": ["{options.outputPath}"],
+        "options": {
+          "outputPath": "libs/nexus-core/dist",
+          "main": "libs/nexus-core/src/index.ts",
+          "tsConfig": "libs/nexus-core/tsconfig.lib.json"
+        }
+      },
+      "typecheck": {
+        "executor": "nx:run-commands",
+        "options": {
+          "cwd": "libs/nexus-core",
+          "command": "tsc -p tsconfig.lib.json --noEmit"
+        }
+      }
+    }
   }
 }
