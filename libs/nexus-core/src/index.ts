@@ -1,1 +1,1 @@
-export * from './lib/nexus-core.js';
+export * from './lib/generated/nexus-core.js';
