@@ -1,3 +1,68 @@
 <ion-app>
-    <ion-router-outlet></ion-router-outlet>
+  <ion-menu contentId="main-content" side="start" menuId="main-menu" style="--width: 78%; --max-width: 300px; --background: var(--panel);">
+    <ion-content class="ion-padding" style="--background: var(--panel);">
+      <div class="side-menu-title">Menu</div>
+      <button class="side-menu-item" (click)="goToPipelines()">
+        <span class="icon">🔌</span> Pipelines
+      </button>
+      <button class="side-menu-item" (click)="goToLists()">
+        <span class="icon">📋</span> Lists
+      </button>
+    </ion-content>
+  </ion-menu>
+
+  <div id="main-content">
+    <div class="topbar">
+      <button class="hamburger-btn" (click)="openMenu()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="topbar-left">
+        <span class="topbar-section">{{ sectionTitle }}</span>
+        @if (state.currentView() === 'work') {
+          <div class="topbar-context-row">
+            @if (state.breadcrumb(); as crumb) {
+              @if (crumb.task) {
+                <span class="topbar-crumb" role="button" tabindex="0" (click)="state.switchToAllTasksInChat()" (keydown.enter)="state.switchToAllTasksInChat()">{{ crumb.project }}</span>
+                <span class="topbar-crumb-sep">/</span>
+                <span>{{ crumb.task }}</span>
+              } @else {
+                <span class="topbar-context">{{ crumb.project }}</span>
+              }
+            } @else {
+              <span class="topbar-context">All Projects</span>
+            }
+          </div>
+        }
+      </div>
+      <span class="topbar-status"><span class="dot"></span>Live</span>
+    </div>
+
+    <div class="view-container">
+      @switch (state.currentView()) {
+        @case ('work') { <app-work-view /> }
+        @case ('dashboard') { <app-dashboard-view /> }
+        @case ('approvals') { <app-approvals-view /> }
+        @case ('lists-admin') { <app-lists-admin /> }
+        @case ('pipelines-admin') { <app-pipelines-admin /> }
+      }
+    </div>
+
+    @if (!isAdminView) {
+      <div class="tabbar">
+        <div class="tab" role="button" tabindex="0" [class.active]="state.currentView() === 'work'" (click)="state.goToTab('work')" (keydown.enter)="state.goToTab('work')">
+          <span class="tab-icon">💬</span>
+          Work
+        </div>
+        <div class="tab" role="button" tabindex="0" [class.active]="state.currentView() === 'dashboard'" (click)="state.goToTab('dashboard')" (keydown.enter)="state.goToTab('dashboard')">
+          <span class="tab-icon">📊</span>
+          Dashboard
+        </div>
+        <div class="tab" role="button" tabindex="0" [class.active]="state.currentView() === 'approvals'" (click)="state.goToTab('approvals')" (keydown.enter)="state.goToTab('approvals')">
+          <span class="tab-icon">✅</span>
+          Approvals
+          <span class="tab-badge">1</span>
+        </div>
+      </div>
+    }
+  </div>
 </ion-app>
