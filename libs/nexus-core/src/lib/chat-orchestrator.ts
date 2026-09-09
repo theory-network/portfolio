@@ -11,9 +11,10 @@
 // everything downstream (which model, which MCP server(s)) stays swappable.
 
 import { ModelMessage, ToolDefinition } from './model-provider.interface';
-import { ProjectConfig, PipelineProjectRef } from './types';
+import { ProjectConfig, PipelineProjectRef, TaskScope } from './types';
 import { getActiveModelProvider } from './model-registry';
 import { getMcpServerForConnection, buildProjectSystemContext, syncAfterChatTurn, McpServerConfig } from './chat-context';
+import { getStructuredAdapter } from './registry';
 import { listMcpTools, callMcpTool } from './mcp-bridge';
 
 const MAX_TOOL_ROUNDS = 4;
@@ -30,12 +31,29 @@ interface RoutedServer {
   server: McpServerConfig;
 }
 
+/**
+ * Resolves a bare taskId (as passed from the sidebar's task picker) into a
+ * TaskScope by fetching the item from the project's todo-connection adapter.
+ * Tasks live on the todo connection (Roam/Linear), not work (GitHub/GitLab),
+ * so there's nowhere else to look this up. Falls back to unscoped (undefined)
+ * if there's no todo connection or the item can't be found — a stale taskId
+ * shouldn't crash the turn, just silently widen back to whole-project scope.
+ */
+async function resolveTaskScope(project: ProjectConfig, taskId?: string): Promise<TaskScope | undefined> {
+  if (!taskId || !project.todo) return undefined;
+  const adapter = getStructuredAdapter(project.todo.pipeline);
+  const item = await adapter.getItem(project.todo, taskId);
+  return item ? { itemId: item.id, title: item.title } : undefined;
+}
+
 export async function runChatTurn(
   project: ProjectConfig,
   history: ModelMessage[],
-  userMessage: string
+  userMessage: string,
+  taskId?: string
 ): Promise<ChatTurnResult> {
   const provider = getActiveModelProvider();
+  const taskScope = await resolveTaskScope(project, taskId);
 
   // Build one routed entry per configured connection (todo, work — either or
   // both), retaining the role association so a tool call can be traced back
@@ -67,7 +85,7 @@ export async function runChatTurn(
 
   for (let round = 0; round < MAX_TOOL_ROUNDS; round++) {
     const response = await provider.sendMessage({
-      systemPrompt: buildProjectSystemContext(project),
+      systemPrompt: buildProjectSystemContext(project, taskScope),
       messages,
       tools,
     });

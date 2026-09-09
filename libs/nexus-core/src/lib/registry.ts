@@ -13,9 +13,9 @@ import { createGitHubV1Adapter } from './adapters/github-v1.adapter';
 
 // TODO: source these from your actual secrets manager / env config, not inline.
 const registry: Record<string, StructuredPipelineAdapter> = {
-  'roam-v1': createRoamV1Adapter({ apiToken: process.env.ROAM_API_TOKEN! }),
-  'linear-v1': createLinearV1Adapter({ apiKey: process.env.LINEAR_API_KEY! }),
-  'github-v1': createGitHubV1Adapter({ token: process.env.GITHUB_TOKEN! }),
+  'roam-v1': createRoamV1Adapter({ apiToken: process.env['ROAM_API_TOKEN']! }),
+  'linear-v1': createLinearV1Adapter({ apiKey: process.env['LINEAR_API_KEY']! }),
+  'github-v1': createGitHubV1Adapter({ token: process.env['GITHUB_TOKEN']! }),
 };
 
 export function getStructuredAdapter(pipelineId: string): StructuredPipelineAdapter {

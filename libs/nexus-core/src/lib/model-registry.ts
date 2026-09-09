@@ -14,17 +14,17 @@ import { createClaudeProvider } from './providers/claude.provider';
 import { createOpenAiCompatibleProvider } from './providers/openai-compatible.provider';
 
 const registry: Record<string, ModelProvider> = {
-  claude: createClaudeProvider(process.env.ANTHROPIC_API_KEY!),
+  claude: createClaudeProvider(process.env['ANTHROPIC_API_KEY']!),
 
   openai: createOpenAiCompatibleProvider({
     id: 'openai',
-    apiKey: process.env.OPENAI_API_KEY!,
+    apiKey: process.env['OPENAI_API_KEY']!,
     model: 'gpt-5',
   }),
 
   deepseek: createOpenAiCompatibleProvider({
     id: 'deepseek',
-    apiKey: process.env.DEEPSEEK_API_KEY!,
+    apiKey: process.env['DEEPSEEK_API_KEY']!,
     model: 'deepseek-chat',
     baseURL: 'https://api.deepseek.com',
   }),
@@ -48,5 +48,5 @@ export function getModelProvider(id: string): ModelProvider {
 
 /** TODO: back this with a real per-tenant/per-user setting rather than one global env var. */
 export function getActiveModelProvider(): ModelProvider {
-  return getModelProvider(process.env.ACTIVE_MODEL_PROVIDER ?? 'claude');
+  return getModelProvider(process.env['ACTIVE_MODEL_PROVIDER'] ?? 'claude');
 }

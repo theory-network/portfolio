@@ -14,7 +14,7 @@
 // After a chat turn that mutated something via MCP, call syncAfterChatTurn()
 // so the structured adapter's cached counts (badges, nudges) catch up.
 
-import { ProjectConfig, PipelineProjectRef, PipelineSummary } from './types';
+import { ProjectConfig, PipelineProjectRef, PipelineSummary, TaskScope } from './types';
 import { getStructuredAdapter } from './registry';
 
 export interface McpServerConfig {
@@ -77,12 +77,22 @@ function contextForConnection(connection: PipelineProjectRef): string {
  * telling it which identifiers to use — keeps "move that ticket to me" or
  * "open a PR for this" unambiguous even with several sources connected.
  * Combines both roles when both are configured.
+ *
+ * When `task` is passed (the sidebar's per-task chat scope), an additional
+ * line restricts the model to that one item. Without this, a task-scoped
+ * conversation would still let the model read/write anything else in the
+ * project — the scoping would only be cosmetic in the chat header, not
+ * actually enforced in what the model does.
  */
-export function buildProjectSystemContext(project: ProjectConfig): string {
+export function buildProjectSystemContext(project: ProjectConfig, task?: TaskScope): string {
   const lines = [project.todo, project.work]
     .filter((c): c is PipelineProjectRef => !!c)
     .map(contextForConnection);
-  return `Project: ${project.projectName}.\n${lines.join('\n')}`;
+  const scopeLine = task
+    ? `\nScope: this conversation is about "${task.title}" (item ${task.itemId}) only. ` +
+      `Don't read or modify other items in this project unless the user explicitly asks about something else.`
+    : '';
+  return `Project: ${project.projectName}.\n${lines.join('\n')}${scopeLine}`;
 }
 
 /**

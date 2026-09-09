@@ -95,3 +95,16 @@ export interface ListItemsOptions {
   includeDone?: boolean;
   limit?: number;
 }
+
+/**
+ * Narrows a chat turn to a single item within a project — the sidebar's
+ * "choose a task" flow scopes a conversation this way instead of the whole
+ * project. Carries just enough to build the system-prompt scoping line and
+ * to key a conversation's storage/history; the full item (status, assignee,
+ * etc.) is fetched from the structured adapter when needed, not duplicated
+ * here.
+ */
+export interface TaskScope {
+  itemId: string;
+  title: string;
+}

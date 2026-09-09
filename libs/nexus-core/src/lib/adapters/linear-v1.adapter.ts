@@ -40,9 +40,9 @@ export function createLinearV1Adapter(config: LinearV1AdapterConfig): Structured
     if (!res.ok) {
       throw new Error(`Linear query failed (${res.status}): ${await res.text()}`);
     }
-    const json = await res.json();
+    const json = (await res.json()) as { errors?: unknown; data: T };
     if (json.errors) throw new Error(`Linear GraphQL error: ${JSON.stringify(json.errors)}`);
-    return json.data as T;
+    return json.data;
   }
 
   function toPipelineItem(issue: any): PipelineItem {
