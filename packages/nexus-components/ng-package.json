@@ -1,6 +1,6 @@
 {
   "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
-  "dest": "../../dist/libs/nexus-service",
+  "dest": "../../dist/packages/nexus-components",
   "lib": {
     "entryFile": "src/index.ts"
   }

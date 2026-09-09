@@ -63,9 +63,7 @@
     "typescript-eslint": "^8.58.0"
   },
   "workspaces": [
-    "packages/*",
-    "libs/shadcn",
-    "libs/*"
+    "packages/*"
   ],
   "dependencies": {
     "@angular/common": "~22.0.4",

@@ -2,7 +2,7 @@ module.exports = {
   displayName: 'nexus-components',
   preset: '../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../../coverage/libs/nexus-components',
+  coverageDirectory: '../../coverage/packages/nexus-components',
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',

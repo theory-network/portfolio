@@ -1,0 +1,19 @@
+{
+  "name": "@theory/shadcn",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./dist/components/index.js",
+  "types": "./dist/components/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/components/index.d.ts",
+      "default": "./dist/components/index.js"
+    },
+    "./util": {
+      "types": "./dist/util/index.d.ts",
+      "default": "./dist/util/index.js"
+    }
+  }
+}

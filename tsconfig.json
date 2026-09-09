@@ -2,5 +2,28 @@
   "extends": "./tsconfig.base.json",
   "compileOnSave": false,
   "compilerOptions": {},
-  "exclude": ["node_modules", "tmp"]
+  "exclude": ["node_modules", "tmp"],
+  "references": [
+    {
+      "path": "./packages/nexus-components"
+    },
+    {
+      "path": "./packages/nexus-service"
+    },
+    {
+      "path": "./apps/nexus-mobile-e2e"
+    },
+    {
+      "path": "./packages/nexus-state"
+    },
+    {
+      "path": "./packages/nexus-core"
+    },
+    {
+      "path": "./apps/nexus-mobile"
+    },
+    {
+      "path": "./packages/shadcn"
+    }
+  ]
 }

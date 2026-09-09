@@ -3,8 +3,11 @@
     "importHelpers": true,
     "isolatedModules": true,
     "lib": ["es2022"],
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
+    "module": "preserve",
+    "moduleResolution": "bundler",
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
     "noEmitOnError": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitOverride": true,
@@ -15,15 +18,6 @@
     "target": "es2022",
     "noUncheckedSideEffectImports": false,
     "types": ["*"],
-    "paths": {
-      "@shadcn/components": ["./libs/shadcn/src/components/index.ts"],
-      "@shadcn/util": ["./libs/shadcn/src/util/index.ts"],
-      "@shadcn/hooks": ["./libs/shadcn/src/hooks"],
-      "@shadcn": ["./libs/shadcn/src/components"],
-      "@theory/nexus-core": ["./libs/nexus-core/src/index.ts"],
-      "@theory/nexus-service": ["./libs/nexus-service/src/index.ts"],
-      "@theory/nexus-state": ["./libs/nexus-state/src/index.ts"],
-      "@theory/nexus-components": ["./libs/nexus-components/src/index.ts"]
-    }
+    "customConditions": ["@theory/source"]
   }
 }
