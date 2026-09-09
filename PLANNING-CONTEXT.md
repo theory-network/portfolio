@@ -110,7 +110,9 @@ split, just two extra `project.json`/`tsconfig` pairs to maintain.
    Icon-picker, Task-picker, Panel/slot-picker). Source of truth for exact
    visual/interaction design.
 
-2. **`libs/nexus-core`** — a real Nx library (`@nx/js:library`, `bundler=tsc`)
+2. **`packages/nexus-core`** (originally built as `libs/nexus-core` — see the
+   two dated updates below for the full path history) — a real Nx library
+   (`@nx/js:library`, `bundler=tsc`)
    inside *this* workspace, not just described: `types.ts`, `adapter.interface.ts`,
    adapters (`roam-v1`, `linear-v1`, `github-v1`), `registry.ts`,
    `chat-context.ts`, `chat-orchestrator.ts`, `mcp-bridge.ts`,
@@ -169,20 +171,62 @@ split, just two extra `project.json`/`tsconfig` pairs to maintain.
    now applies to `theory-portfolio` rather than a hypothetical
    `nexus-workspace`.
 
-   This `tmp/nexus-core/` staging folder (including this file) was left in
-   place after the copy, not deleted — nothing currently depends on it, but
-   it hasn't been cleaned up either.
+   This `tmp/nexus-core/` staging folder was left in place after the copy
+   at the time — it has since been deleted (see the update directly below).
 
-3. **Ionic Angular port** (`command-center-angular.zip`, separate Angular
-   CLI project, NOT yet inside this Nx workspace) — full working app:
+   **Update (2026-09-09, later same day): moved `libs/` → `packages/`
+   workspace-wide.** All five `theory-portfolio` libs (`nexus-core`,
+   `nexus-service`, `nexus-state`, `nexus-components`, `shadcn` — not just
+   `nexus-core`) were moved from `libs/*` to `packages/*` and switched from
+   hand-maintained `tsconfig.base.json` path aliases to Nx's newer
+   "TS project references + package-manager-workspaces" convention:
+   - `tsconfig.base.json` no longer has a `paths` map at all; `nx sync` now
+     auto-maintains TypeScript project references across every
+     `tsconfig.json` in the repo instead.
+   - `module`/`moduleResolution` moved from `nodenext` to `preserve`/
+     `bundler` at the base level (required — `bundler` resolution is a hard
+     TS compile error under `nodenext`).
+   - `nx.json` registers `@nx/js/typescript`, scoped via `include` to only
+     `packages/nexus-core/**` and `packages/shadcn/**` — the three Angular
+     libs (`nexus-components`/`nexus-service`/`nexus-state`) keep their
+     explicit `ng-packagr-lite` build targets untouched, so there's no
+     inferred-vs-explicit target conflict.
+   - `nexus-core`'s build/typecheck targets moved from an embedded
+     `package.json` `"nx"` key to plugin-inferred targets.
+   - `shadcn` got a real `package.json` for the first time (it never had
+     one) and lost its now-empty `project.json`.
+   - **Angular libs do NOT get hand-written `main`/`types`/`exports`** —
+     ng-packagr generates its own manifest into `dist/` using Angular
+     Package Format file naming (e.g. `theory-nexus-service.d.ts`, not
+     `index.d.ts`) and will warn/conflict if the source `package.json`
+     declares its own. Worth knowing before touching these three libs again.
+   - Verified via `nx run-many -t typecheck,build,lint,test --all` plus
+     `nx build nexus-mobile`. Four pre-existing failures remain, confirmed
+     via `git show HEAD:...` to predate this migration entirely (not
+     caused by it): `nexus-components`/`nexus-service`/`nexus-state` all
+     fail `@nx/dependency-checks` lint because their Nx-generated stub
+     source never actually imports the `@angular/core`/`@angular/common`
+     peer deps declared in `package.json`; `nexus-core` has no `.spec.ts`
+     files yet so its inferred `test` target fails with "no tests found."
+     None of these are new — they're unfixed generator boilerplate debt.
+   - `apps/nexus-mobile` needed **zero changes** — a repo-wide grep before
+     the move confirmed it (and every lib) had zero cross-references to any
+     of the removed path aliases already.
+   - The `tmp/nexus-core/` staging folder mentioned above has since been
+     deleted (its contents are now redundant with `packages/nexus-core`).
+
+3. **Ionic Angular port, now living in this workspace as `apps/nexus-mobile`**
+   (`apps/nexus-mobile-e2e` alongside it) — full working app:
    `AppStateService` (Angular signals, all mockup logic + hardcoded seed
    data ported over), all screens/modals as standalone components, Ionic
    `ModalController` for sheet/popover modals. Verified interactively via
    Playwright, not just compiled.
 
    Two real layout bugs were found and fixed during that port (worth
-   knowing about if similar symptoms show up in `nexus-workspace`'s own
-   frontend later):
+   knowing about if similar symptoms show up elsewhere — this was written
+   before the app lived in `theory-portfolio`; now that it does, as
+   `apps/nexus-mobile`, `nx build`/`lint`/`test` all pass clean on it, so
+   these fixes evidently carried over intact):
    - Ionic sheet modals rendered fully off-screen — the ported
      `.modal-sheet` CSS had a leftover `transform: translateY(100%)`
      meant to be reset by the old mockup's `.modal-overlay.open` class,
@@ -208,10 +252,11 @@ split, just two extra `project.json`/`tsconfig` pairs to maintain.
 
 ## What's NOT built yet (the actual next step)
 
-`libs/nexus-core` is done (see above) and — as of the 2026-09-09 update
-above — now lives in `theory-portfolio`, not a separate `nexus-workspace`.
-Everything below applies to `theory-portfolio` as the target workspace.
-Remaining, in order:
+`nexus-core` is done (see above) and now lives at `packages/nexus-core`
+inside `theory-portfolio`, not a separate `nexus-workspace`. The Angular
+app also already lives here, as `apps/nexus-mobile` (see item 5 below —
+this used to be an open question, it isn't anymore). Everything below
+applies to `theory-portfolio` as the target workspace. Remaining, in order:
 
 1. Add a Next.js app via `@nx/next:application` (explicitly requested to
    be a proper Nx-generated app, not a bolted-on `create-next-app`) —
@@ -226,12 +271,19 @@ Remaining, in order:
    `answerQuestion()` to call the new BFF endpoints instead of mutating
    local mock state, and replace the hardcoded `SEED_LIST_GROUPS`/
    `SEED_PIPELINES` with real fetches once the summary endpoint exists.
-5. The Angular/Ionic app currently lives as a **separate, standalone
-   Angular CLI project**, not inside any Nx workspace. Whether to fold it
-   into `theory-portfolio` (as an `@nx/angular` app, now that
-   `nexus-core` lives there) or keep it a separate deployable calling the
-   BFF over HTTP hasn't been decided yet — worth raising explicitly rather
-   than assuming either way.
+5. ~~The Angular/Ionic app currently lives as a separate, standalone
+   Angular CLI project~~ — **resolved**: it's already inside
+   `theory-portfolio`, as `apps/nexus-mobile` (`apps/nexus-mobile-e2e`
+   alongside it), a real `@nx/angular` app using the new esbuild
+   `@angular/build:application` builder, standalone + zoneless components.
+   Confirmed by direct inspection, not just this doc's say-so — its
+   `src/app/core/app-state.service.ts` and `src/app/features/{dashboard,
+   work,approvals,admin-lists,admin-pipelines,modals}` match this doc's
+   description of the ported app exactly, and it builds/lints/tests clean
+   today. It does **not yet import `nexus-core`, `nexus-service`,
+   `nexus-state`, `nexus-components`, or `shadcn`** — confirmed via a
+   repo-wide grep during the `packages/` migration above — so item 4's
+   rewire from mock state to the BFF is still fully ahead of it.
 
 ## Explicitly deferred (don't build these unless asked)
 
