@@ -44,9 +44,18 @@ function buildLiveActivityLayout(): { layout: ActivityLayout; dynamicIslandLayou
 /**
  * Starts/updates/ends the platform-native Focus indicator (iOS Live
  * Activity, Android foreground-service notification) and the stall-reminder
- * local notification. On web (no Capacitor native runtime) every native call
- * is logged instead of invoked — this is the seam to fill in once the app is
- * actually running under Capacitor's native shell.
+ * local notification.
+ *
+ * Web fallback: `@capacitor/local-notifications` ships a real web
+ * implementation (browser `Notification` API, with `setTimeout`-based
+ * scheduling) — so the stall reminder works in a plain browser tab, not just
+ * under Capacitor's native shell. There's no equivalent for the persistent
+ * activity indicator itself: `@capgo/capacitor-live-activities`'s own web
+ * implementation reports `areActivitiesSupported() -> false` rather than
+ * faking a Live Activity, and `@capawesome-team/capacitor-android-foreground-service`
+ * ships no web implementation at all (it's an Android-only OS concept) — a
+ * browser tab has no persistent-indicator equivalent to fall back to, so
+ * that piece is simply absent on web, not stubbed.
  */
 @Injectable({ providedIn: 'root' })
 export class FocusService {
@@ -150,12 +159,11 @@ export class FocusService {
   // ---- Native activity plumbing ----
 
   private async startNativeActivity(project: Project, task: ProjectTask): Promise<string | undefined> {
-    if (this.platform === 'ios') {
-      const support = await CapgoLiveActivities.areActivitiesSupported();
-      if (!support.supported) {
-        console.log(`[focus] Live Activities unsupported on this device (${support.reason ?? 'unknown reason'})`);
-        return undefined;
-      }
+    // Ask the plugin itself rather than branching on platform — its web
+    // implementation already answers `false` safely (see class doc), so this
+    // one check covers "real iOS 16.1+ device" without a separate web case.
+    const support = await CapgoLiveActivities.areActivitiesSupported();
+    if (support.supported) {
       const { layout, dynamicIslandLayout } = buildLiveActivityLayout();
       const result = await CapgoLiveActivities.startActivity({ layout, dynamicIslandLayout, data: liveActivityData(project, task) });
       return result.activityId;
@@ -172,16 +180,13 @@ export class FocusService {
       });
       return String(FOREGROUND_SERVICE_NOTIFICATION_ID);
     }
-    console.log(`[focus] (web) would start a native activity for "${task.title}" (${project.name})`);
+    // Web (or an unsupported iOS device): no Capacitor-provided persistent
+    // indicator exists for this case — the stall reminder below still works.
+    console.log(`[focus] no persistent activity indicator available on "${this.platform}" (${support.reason ?? 'not iOS'}) — "${task.title}" (${project.name}) is focused in-app only`);
     return undefined;
   }
 
   private async updateNativeActivity(activityId: string | undefined, project: Project, task: ProjectTask): Promise<void> {
-    if (this.platform === 'ios') {
-      if (!activityId) return;
-      await CapgoLiveActivities.updateActivity({ activityId, data: liveActivityData(project, task) });
-      return;
-    }
     if (this.platform === 'android') {
       await ForegroundService.updateForegroundService({
         id: FOREGROUND_SERVICE_NOTIFICATION_ID,
@@ -192,44 +197,47 @@ export class FocusService {
       });
       return;
     }
-    console.log(`[focus] (web) would update the native activity to "${task.title}"`);
+    if (!activityId) return;
+    await CapgoLiveActivities.updateActivity({ activityId, data: liveActivityData(project, task) });
   }
 
   private async endNativeActivity(activityId: string | undefined): Promise<void> {
-    if (this.platform === 'ios') {
-      if (!activityId) return;
-      await CapgoLiveActivities.endActivity({ activityId, dismissalPolicy: 'immediate' });
-      return;
-    }
     if (this.platform === 'android') {
       await ForegroundService.stopForegroundService();
       return;
     }
-    console.log('[focus] (web) would end the native activity');
+    if (!activityId) return;
+    await CapgoLiveActivities.endActivity({ activityId, dismissalPolicy: 'immediate' });
   }
 
   // ---- Stall reminder ----
+  //
+  // No platform gate here on purpose: @capacitor/local-notifications' own
+  // web implementation (browser Notification API + setTimeout scheduling)
+  // makes this work in a plain browser tab too. It throws `unavailable()`
+  // when the browser lacks Notification support at all (or blocks the
+  // permission prompt) — caught below so a browser without notification
+  // support just means no reminder fires, not a broken Focus session.
 
   private async scheduleStallReminder(taskTitle: string, thresholdMinutes: number): Promise<void> {
-    if (this.platform === 'web') {
-      console.log(`[focus] (web) would schedule a stall reminder for "${taskTitle}" in ${thresholdMinutes}m`);
-      return;
+    try {
+      await LocalNotifications.requestPermissions();
+      await LocalNotifications.schedule({
+        notifications: [
+          {
+            id: STALL_REMINDER_ID,
+            title: 'Still on this?',
+            body: `"${taskTitle}" has been open for ${thresholdMinutes} minutes.`,
+            schedule: { at: new Date(Date.now() + thresholdMinutes * 60_000) },
+          },
+        ],
+      });
+    } catch (err) {
+      console.log(`[focus] stall reminder unavailable on "${this.platform}": ${err instanceof Error ? err.message : err}`);
     }
-    await LocalNotifications.requestPermissions().catch(() => undefined);
-    await LocalNotifications.schedule({
-      notifications: [
-        {
-          id: STALL_REMINDER_ID,
-          title: 'Still on this?',
-          body: `"${taskTitle}" has been open for ${thresholdMinutes} minutes.`,
-          schedule: { at: new Date(Date.now() + thresholdMinutes * 60_000) },
-        },
-      ],
-    });
   }
 
   private async cancelStallReminder(): Promise<void> {
-    if (this.platform === 'web') return;
-    await LocalNotifications.cancel({ notifications: [{ id: STALL_REMINDER_ID }] });
+    await LocalNotifications.cancel({ notifications: [{ id: STALL_REMINDER_ID }] }).catch(() => undefined);
   }
 }
