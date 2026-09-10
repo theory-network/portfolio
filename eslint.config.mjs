@@ -7,7 +7,9 @@ export default [
     {
         ignores: [
             "**/dist",
-            "**/out-tsc"
+            "**/out-tsc",
+            "apps/nexus-mobile/ios",
+            "apps/nexus-mobile/android"
         ]
     },
     {

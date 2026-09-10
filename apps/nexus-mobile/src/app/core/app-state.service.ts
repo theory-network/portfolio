@@ -4,6 +4,8 @@ import {
   ChatMessage,
   CommunityPipeline,
   ConversationStore,
+  FocusDefaults,
+  FocusState,
   LastScopeMap,
   ListGroup,
   PipelineInstance,
@@ -192,6 +194,30 @@ export class AppStateService {
 
   // ---- Sidebar slot assignment ----
   readonly slotAssignment = signal<SlotAssignment>({ left: 'personal', right: 'pro' });
+
+  // ---- Focus mode ----
+  readonly activeFocus = signal<FocusState | null>(null);
+  readonly focusDefaults = signal<FocusDefaults>({ lastThresholdMinutes: 25 });
+
+  setActiveFocus(focus: FocusState | null): void {
+    this.activeFocus.set(focus);
+  }
+
+  setFocusDefaults(defaults: FocusDefaults): void {
+    this.focusDefaults.set(defaults);
+  }
+
+  /** Persists the per-project Focus memory (last task focused, threshold override) after a Focus start/switch. */
+  setProjectFocusHistory(groupKey: string, projectName: string, taskId: string, thresholdMinutes: number): void {
+    this.listGroups.update((groups) => {
+      const group = groups[groupKey];
+      const index = group?.projects.findIndex((p) => p.name === projectName) ?? -1;
+      if (!group || index < 0) return groups;
+      const projects = [...group.projects];
+      projects[index] = { ...projects[index], lastFocusTaskId: taskId, focusThresholdMinutes: thresholdMinutes };
+      return { ...groups, [groupKey]: { ...group, projects } };
+    });
+  }
 
   // ---- Chat scope + conversation store ----
   readonly activeTaskScope = signal<ActiveTaskScope | null>(null);

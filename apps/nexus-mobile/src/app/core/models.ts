@@ -25,6 +25,27 @@ export interface Project {
   todoPipelineId?: string;
   workPipelineId?: string;
   workRepo?: string;
+  /** Per-project Focus memory. */
+  lastFocusTaskId?: string;
+  focusThresholdMinutes?: number;
+}
+
+/** An in-progress Focus session — at most one active app-wide at a time. */
+export interface FocusState {
+  groupKey: string;
+  projectName: string;
+  taskId: string;
+  startedAt: string; // ISO timestamp
+  thresholdMinutes: number;
+  /** Native activity handle — iOS Live Activity id, or a fixed id string on Android/web. */
+  activityId?: string;
+}
+
+/** Global Focus fallback, used the first time Focus is opened for a project with no history of its own. Mock/in-memory only — real persistence is the deferred Postgres design. */
+export interface FocusDefaults {
+  lastProjectKey?: string; // `${groupKey}:${projectName}`
+  lastTaskId?: string;
+  lastThresholdMinutes: number;
 }
 
 export interface ListGroup {

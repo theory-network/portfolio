@@ -250,6 +250,123 @@ split, just two extra `project.json`/`tsconfig` pairs to maintain.
    class name from the mockup (`.proj`, `.modal-sheet`, `.task-picker-row`,
    etc.) works unchanged in the Angular templates.
 
+## Focus Mode feature (built 2026-09-09, from `nexus-focus-mode-spec.md`)
+
+A "Focus" button on the project chat header starts a persistent native
+activity (iOS Live Activity / Android foreground-service notification) for
+one task, with a local-notification stall reminder that fires if it's still
+open after a threshold. Built from a handoff spec (`nexus-focus-mode-spec.md`)
+whose file paths/conventions were written against a guessed folder layout —
+verified and adjusted against the real `apps/nexus-mobile` conventions before
+writing anything. What actually differs from that spec, and why:
+
+- **No `.component.ts`/`.html`/`.scss` split, no `ion-chip`/`ion-select`, no
+  `IonicModule` import.** Every existing modal in this app (`task-picker-modal.ts`,
+  `pipeline-modal.ts`, etc.) is a single-file standalone component with an
+  inline template using the mockup's ported CSS classes and plain
+  `@Input({ required: true })`/`ModalController.create({ cssClass: 'sheet-modal' })`
+  — nothing in this app imports `IonicModule` or uses Ionic's own form
+  components. `focus-picker-modal.ts` follows that convention: a
+  `.task-picker-row` list (reused, with a new `.selected` modifier) instead of
+  chips, a plain `<select>` for the threshold.
+- **`resolveFocusStart` validates the carried-over taskId against the
+  target project's *open* tasks before trusting it**, rather than blindly
+  taking `project.lastFocusTaskId ?? defaults.lastTaskId` per the spec's
+  literal pseudocode. Every project's tasks are seeded starting `t1`, `t2`,
+  ... (`Project` has no numeric/global id), so an unvalidated global default
+  could silently resolve to the wrong task on a different project, or to a
+  task that's since been completed. Mirrors the existing "stale scope falls
+  back silently" rule `chat-context.ts` already uses for task-scoped chat.
+- **Button placement: a new `.chat-header` bar** in `work-view.ts`, shown
+  only when a project is open (`state.breadcrumb()` is non-null) — this is
+  the first thing to actually render the `breadcrumb` computed signal, which
+  existed in `AppStateService` unused since the original port. The project
+  name in that crumb is now also clickable → `switchToAllTasksInChat()`
+  (same dangling method), closing out a second loose end from the original
+  port for free.
+- **The picker doubles as the "switch task" UI.** Reopening it while a
+  Focus session is already active *for that same project* calls
+  `FocusService.switchTask(taskId, thresholdMinutes)` instead of `start()`,
+  so the native activity updates in place instead of restarting — the spec
+  only sketched `switchTask(taskId)` (no threshold param); it now takes an
+  optional `thresholdMinutes` so re-picking the threshold on an
+  already-focused project isn't silently dropped.
+- **Auto-cancel-on-done is wired as a reactive `effect()` watching the
+  focused task's live status, not a call site.** There is no "mark task
+  done" UI anywhere in this app yet (tasks are seed data only) — nothing
+  currently sets `status: 'done'` interactively. The effect in
+  `FocusService`'s constructor will fire the moment some future feature does
+  that; adding a "complete task" UI wasn't part of this spec and would have
+  been scope creep.
+- **Persistence: in-memory signals only** (`AppStateService.activeFocus`,
+  `.focusDefaults`, plus `lastFocusTaskId`/`focusThresholdMinutes` on
+  `Project`) — same mock/in-memory status as `conversations`/`pipelines`/etc.
+  Real persistence is the already-deferred Postgres design below.
+
+**Native scope — the actual constraint that shaped this pass.** The user
+asked for full Capacitor bring-up, not just the Angular-side logic. Before
+this feature, `nexus-mobile` had **zero** Capacitor anywhere — no
+`@capacitor/core`, no `ios`/`android` folders, plain browser build. This is
+now a real Capacitor app:
+
+- `@capacitor/core`, `@capacitor/cli`, `@capacitor/ios`, `@capacitor/android`,
+  `@capacitor/local-notifications`, `@capgo/capacitor-live-activities`, and
+  `@capawesome-team/capacitor-android-foreground-service` (correct package
+  name — not `@capawesome/...` as the spec guessed) are installed at
+  `8.5.1`/`8.3.1`/`1.1.4`/`8.1.0` respectively, all compatible
+  (`@capacitor/core >=8.0.0` peer range).
+- `apps/nexus-mobile/capacitor.config.ts` — `appId: 'com.theory.nexus'`,
+  `appName: 'Nexus'` (easy to change later; picked from the `@theory` npm
+  scope, not confirmed with a human), `webDir` pointing at the esbuild
+  output's `browser/` subfolder.
+- `ios/` and `android/` platform folders were generated via `cap add`
+  (their own generated `.gitignore`s already exclude build output/Pods/copied
+  web assets — nothing extra was needed in the root `.gitignore`).
+  `eslint.config.mjs` needed a new root-level ignore for both folders — the
+  linter was picking up the *copied, minified* web bundle inside
+  `android/app/src/main/assets/public/*.js` as source and erroring on
+  generated-code patterns (`var`, non-const reassignment) that don't apply.
+- `FocusService` (`apps/nexus-mobile/src/app/core/focus.service.ts`) calls
+  the real plugin APIs — `CapgoLiveActivities.startActivity/updateActivity/endActivity`
+  with a small hand-built layout DSL tree (task title + project name, a 🎯
+  glyph for the Dynamic Island's compact/minimal states), `ForegroundService.startForegroundService/updateForegroundService/stopForegroundService`,
+  `LocalNotifications.schedule/cancel` — verified against each plugin's real
+  `.d.ts` in `node_modules`, not guessed. All three no-op to a `console.log`
+  when `Capacitor.getPlatform() === 'web'`.
+- `ios/App/App/Info.plist` got `NSSupportsLiveActivities: true` (required by
+  Apple for any Live Activity to display at all).
+- `android/app/src/main/res/drawable/ic_stat_focus.xml` — a minimal vector
+  status-bar icon, added because `ForegroundService.startForegroundService`'s
+  `smallIcon` is a required drawable-resource reference and the generated
+  Android template only ships mipmap launcher icons, not a drawable one.
+- CocoaPods was installed via `brew` in case some future plugin needs it,
+  but turned out unnecessary here — Capacitor 8's `cap add ios` uses Swift
+  Package Manager exclusively now (`ios/App/CapApp-SPM/Package.swift`), no
+  `Podfile` was generated.
+
+**What's still not achievable, and why — this needs a human with the real
+toolchain, not more agent time:**
+
+- This machine has Xcode **Command Line Tools** only, not the full Xcode.app
+  (`xcodebuild` errors: "requires Xcode"). The `ios/` project has never been
+  opened or built.
+- `ANDROID_HOME` points at `/Volumes/MyPassport/Android`, an external drive
+  that wasn't mounted during this session — no accessible Android SDK, so
+  the `android/` project has never been gradle-built either.
+- **The Live Activity widget extension itself doesn't exist and can't be
+  created from the CLI.** `@capgo/capacitor-live-activities` renders its
+  JSON layout DSL through a SwiftUI widget extension target that Apple's
+  tooling requires adding via Xcode's own project editor (File → New →
+  Target → Widget Extension, with an App Group configured for shared data).
+  This is the one piece of this feature that is fundamentally a
+  point-and-click Xcode step, not something achievable by editing files.
+- Once Xcode.app is installed and the widget extension target exists, and
+  once the Android SDK is reachable, `npx cap open ios` / `npx cap open
+  android` from `apps/nexus-mobile` should get to a real device/simulator
+  build — nothing else in the native setup is known to be missing, but
+  neither platform has actually been built/run yet, so treat that as
+  unverified rather than confirmed working.
+
 ## What's NOT built yet (the actual next step)
 
 `nexus-core` is done (see above) and now lives at `packages/nexus-core`
