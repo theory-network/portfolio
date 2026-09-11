@@ -47,6 +47,20 @@
           "watchDepsName": "watch-deps"
         }
       }
+    },
+    {
+      "plugin": "@nx/js/typescript",
+      "options": {
+        "typecheck": {
+          "targetName": "tsc:typecheck"
+        },
+        "build": {
+          "targetName": "tsc:build",
+          "configName": "tsconfig.lib.json",
+          "buildDepsName": "tsc:build-deps",
+          "watchDepsName": "tsc:watch-deps"
+        }
+      }
     }
   ],
   "analytics": false,
@@ -74,6 +88,9 @@
       "cache": true,
       "dependsOn": ["^build"],
       "inputs": ["production", "^production"]
+    },
+    "compile": {
+      "syncGenerators": ["@nx/js:typescript-sync", "@aws/nx-plugin:ts#sync"]
     }
   },
   "generators": {
@@ -93,5 +110,6 @@
       "style": "scss",
       "unitTestRunner": "jest"
     }
-  }
+  },
+  "parallel": 8
 }

@@ -2,6 +2,10 @@
 command = "npx"
 args = [ "nx", "mcp", "--minimal" ]
 
+[mcp_servers.nx-plugin-for-aws]
+command = "npx"
+args = [ "-y", "@aws/nx-plugin-mcp" ]
+
 [features]
 multi_agent = true
 
