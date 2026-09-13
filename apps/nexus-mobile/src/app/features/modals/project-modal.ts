@@ -10,8 +10,8 @@ import { IconPickerModal } from './icon-picker-modal';
   selector: 'app-project-modal',
   imports: [FormsModule, KeyValuePipe],
   template: `
-    <div class="modal-sheet-anchor">
-    <div class="modal-sheet">
+    <div class="modal-sheet-anchor" (click)="cancel()">
+    <div class="modal-sheet" (click)="$event.stopPropagation()">
       <div class="modal-title">{{ existingProjectName ? 'Edit project' : 'Add project' }}</div>
 
       <label class="modal-field-label" for="project-icon-btn">Icon</label>

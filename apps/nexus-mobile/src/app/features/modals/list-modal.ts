@@ -8,8 +8,8 @@ import { IconPickerModal } from './icon-picker-modal';
   selector: 'app-list-modal',
   imports: [FormsModule],
   template: `
-    <div class="modal-sheet-anchor">
-    <div class="modal-sheet">
+    <div class="modal-sheet-anchor" (click)="cancel()">
+    <div class="modal-sheet" (click)="$event.stopPropagation()">
       <div class="modal-title">{{ existingKey ? 'Edit list' : 'Add list' }}</div>
 
       <label class="modal-field-label" for="list-icon-btn">Icon</label>

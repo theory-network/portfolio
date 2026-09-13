@@ -8,8 +8,8 @@ import { FocusService } from '../../core/focus.service';
   selector: 'app-focus-picker-modal',
   imports: [FormsModule],
   template: `
-    <div class="modal-sheet-anchor">
-    <div class="modal-sheet">
+    <div class="modal-sheet-anchor" (click)="cancel()">
+    <div class="modal-sheet" (click)="$event.stopPropagation()">
       <div class="modal-title">Focus — {{ projectName }}</div>
 
       <div class="modal-field-label">Task</div>

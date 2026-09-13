@@ -5,8 +5,8 @@ import { ICON_CATEGORIES } from '../../core/models';
 @Component({
   selector: 'app-icon-picker-modal',
   template: `
-    <div class="modal-sheet-anchor">
-    <div class="modal-sheet icon-picker-sheet">
+    <div class="modal-sheet-anchor" (click)="cancel()">
+    <div class="modal-sheet icon-picker-sheet" (click)="$event.stopPropagation()">
       <div class="modal-title">Choose an icon</div>
 
       <div class="icon-picker-grid-scroll">

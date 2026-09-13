@@ -6,8 +6,8 @@ import { SlotSide } from '../../core/models';
 @Component({
   selector: 'app-task-picker-modal',
   template: `
-    <div class="modal-sheet-anchor">
-    <div class="modal-sheet">
+    <div class="modal-sheet-anchor" (click)="cancel()">
+    <div class="modal-sheet" (click)="$event.stopPropagation()">
       <div class="modal-title">Choose a task — {{ projectName }}</div>
 
       <div>

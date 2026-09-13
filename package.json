@@ -12,7 +12,8 @@
     "build:skip-lint": "nx run-many --target build --configuration=skip-lint",
     "build:all": "nx run-many --target build --all",
     "affected:all": "nx affected --target build",
-    "prepare": "husky"
+    "prepare": "husky",
+    "nexus-serve": "npx nx serve nexus-mobile"
   },
   "private": true,
   "devDependencies": {

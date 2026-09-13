@@ -8,8 +8,8 @@ import { PIPELINE_TYPE_FIELDS, PipelineInstance } from '../../core/models';
   selector: 'app-pipeline-modal',
   imports: [FormsModule],
   template: `
-    <div class="modal-sheet-anchor">
-    <div class="modal-sheet">
+    <div class="modal-sheet-anchor" (click)="cancel()">
+    <div class="modal-sheet" (click)="$event.stopPropagation()">
       <div class="modal-title">{{ existingId ? 'Edit pipeline' : 'Add pipeline' }}</div>
 
       <label class="modal-field-label" for="pipeline-type-select">Type</label>

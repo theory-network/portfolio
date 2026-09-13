@@ -9,8 +9,8 @@ import { PipelineModal } from './pipeline-modal';
   selector: 'app-browse-modal',
   imports: [FormsModule],
   template: `
-    <div class="modal-sheet-anchor">
-    <div class="modal-sheet">
+    <div class="modal-sheet-anchor" (click)="close()">
+    <div class="modal-sheet" (click)="$event.stopPropagation()">
       <div class="modal-title">Browse community pipelines</div>
 
       <input class="modal-input" type="text" placeholder="Search pipelines…" [(ngModel)]="query" />
