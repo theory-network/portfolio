@@ -66,6 +66,7 @@
   },
   "workspaces": [
     "apps/*",
-    "packages/*"
+    "packages/*",
+    "packages/common/shadcn"
   ]
 }

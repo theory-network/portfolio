@@ -14,7 +14,8 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "paths": {
-      "@theory/ui": ["./packages/ui/src/index.ts"]
+      "@theory/ui": ["./packages/ui/src/index.ts"],
+      "@theory/common-shadcn": ["./packages/common/shadcn/src/index.ts"]
     },
     "strict": false,
     "noUncheckedSideEffectImports": false,

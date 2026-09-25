@@ -9,7 +9,8 @@
       "!{projectRoot}/.eslintrc.json",
       "!{projectRoot}/eslint.config.mjs"
     ],
-    "sharedGlobals": []
+    "sharedGlobals": [],
+    "biome": ["default", "{workspaceRoot}/biome.json"]
   },
   "plugins": [
     {
