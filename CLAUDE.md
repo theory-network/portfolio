@@ -147,3 +147,21 @@ and `npx nx format:check --all` to check (CI runs the check). Generated or
 tool-managed files go in `.prettierignore`. `@aws/nx-plugin` still installs
 Biome and formats the code its generators create with it, so run
 `npx nx format:write --all` after using a generator. Biome is not enforced.
+
+## Capturing technology decision patterns
+
+While working, watch for the user making a technology, tooling or process
+decision that looks like a reusable pattern rather than a one-off. Examples:
+choosing Prettier over Biome as the enforced formatter, keeping a generated
+library exactly as generated, one branch and PR per issue, or rejecting an
+approach for a stated reason. When you notice one:
+
+- Say so briefly at a natural pause (after the current step, not mid-task),
+  and quote the decision in one line.
+- Propose wording and where it belongs (this repo, or both `theory-portfolio`
+  and `theory-apps`), and ask whether to add it to `CLAUDE.md`. Don't add it
+  without an answer.
+- If yes, make the change on a `chore/` branch like any other one-off change
+  (see "Branches and pull requests"). If no, drop it and don't ask again
+  about the same decision.
+- Skip anything this file already covers, and prompt once per decision.
