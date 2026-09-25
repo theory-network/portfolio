@@ -22,7 +22,7 @@ The site launches on andredavcev.com and moves to theorynetwork.com once that do
 - **SEO:** static HTML prerendered at build time; there is no server.
 - **Hosting:** S3 and CloudFront, deployed with Terraform through `@aws/nx-plugin`.
 - **Analytics:** Plausible (cookie-free).
-- **Tooling:** Vitest (unit tests), ESLint, Biome (formatting and import order), Playwright (end-to-end), and husky with git-secrets as a pre-commit hook.
+- **Tooling:** Vitest (unit tests), ESLint, Prettier (formatting, via `nx format`), Playwright (end-to-end), and husky with git-secrets as a pre-commit hook.
 
 ## Getting started
 

@@ -139,3 +139,11 @@ the multi-line body keeps its formatting.
   tip that differs from the PR's head, and tell the user about it. Never
   delete the current branch or `main`.
 - Don't push, open a PR or merge one unless asked.
+
+## Formatting
+
+Prettier is the formatter, run through Nx: `npx nx format:write --all` to fix
+and `npx nx format:check --all` to check (CI runs the check). Generated or
+tool-managed files go in `.prettierignore`. `@aws/nx-plugin` still installs
+Biome and formats the code its generators create with it, so run
+`npx nx format:write --all` after using a generator. Biome is not enforced.

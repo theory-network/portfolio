@@ -38,8 +38,8 @@ jobs:
           restore-keys: |
             nx-${{ runner.os }}-
 
-      # Formatting and import order (Biome)
-      - run: npx biome ci .
+      # Formatting (Prettier, via Nx)
+      - run: npx nx format:check --all
 
       # PRs compare against the base branch; pushes to main against the previous commit
       - run: >-
