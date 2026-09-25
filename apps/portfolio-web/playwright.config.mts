@@ -30,9 +30,11 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
   /* Run your local dev server before starting the tests */
+  // `nx dev portfolio-firefly` also starts the host (portfolio-web:dev), so
+  // waiting on the remote's entry file means both servers are up.
   webServer: {
-    command: 'npx nx dev portfolio-web',
-    url: 'http://127.0.0.1:4200',
+    command: 'npx nx dev portfolio-firefly',
+    url: 'http://127.0.0.1:4201/remoteEntry.js',
     reuseExistingServer: true,
     cwd: workspaceRoot,
   },

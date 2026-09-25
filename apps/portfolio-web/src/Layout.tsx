@@ -20,6 +20,13 @@ export function Layout() {
             >
               Home
             </Link>
+            <Link
+              to="/portfolio/firefly"
+              className={styles.navLink}
+              activeProps={{ className: styles.navLinkActive }}
+            >
+              Firefly
+            </Link>
           </nav>
         </div>
       </header>
