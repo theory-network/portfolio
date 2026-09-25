@@ -102,3 +102,29 @@ change: what changed, why, and how it was verified. Don't leave the body
 empty or a one-liner. Put the Linear issue id in the subject (e.g.
 `(THE-494)`), and pass the message from a file (`git commit -F <file>`) so
 the multi-line body keeps its formatting.
+
+## Branches and pull requests
+
+- **One branch and one PR per Linear issue.** When told to start work on an
+  issue, create its branch right away from an up-to-date `main`. Name it
+  `feature/<issue-id>-<short-description>` for new work or
+  `bug/<issue-id>-<short-description>` for fixes, with the issue id in
+  lowercase (e.g. `feature/the-494-repo-housekeeping` for THE-494). Don't
+  bundle several issues into one branch or PR, so each issue stays separate
+  in the git history.
+- **One-off tasks with no Linear issue** (docs, config, housekeeping) use
+  `chore/<short-description>` (e.g. `chore/branch-naming-rules`). They still
+  get their own PR and follow the same squash-merge rules. If the work turns
+  out to be real project scope, check with the user about creating an issue
+  instead.
+- **Squash merge only.** `main` requires a PR and linear history, so each PR
+  lands as a single commit. Make the PR title the issue's title with the id
+  in parentheses (e.g. `1.1 Repo housekeeping: README (THE-494)`), and build
+  the PR body from the commit summaries (what, why, how verified).
+- **Dependent issues are stacked.** Base the next branch and PR on the
+  previous issue's branch, and merge them bottom-up. After each squash merge,
+  rebase the next branch onto `main` and retarget its PR to `main`, since the
+  squash rewrites the commits the branch was built on.
+- **Delete the branch after merging.** The repo's "Automatically delete head
+  branches" setting does this.
+- Don't push, open a PR or merge one unless asked.
