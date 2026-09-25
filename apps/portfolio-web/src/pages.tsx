@@ -1,3 +1,4 @@
+import { Button } from '@theory/common-shadcn/components/ui/button';
 import { Badge } from '@theory/ui';
 import styles from './app.module.css';
 
@@ -10,6 +11,7 @@ export function HomePage() {
         <Badge label="Theory Network" />
         <h1>Theory Network</h1>
         <p>Site under construction.</p>
+        <Button>shadcn Button</Button>
       </section>
     </div>
   );

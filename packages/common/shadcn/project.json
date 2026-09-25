@@ -1,0 +1,67 @@
+{
+  "name": "@theory/common-shadcn",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/common/shadcn/src",
+  "projectType": "library",
+  "tags": [],
+  "metadata": {
+    "generator": "ts#project"
+  },
+  "targets": {
+    "assemble": {
+      "dependsOn": ["compile"]
+    },
+    "build": {
+      "executor": "@nx/js:tsc",
+      "dependsOn": ["lint", "compile", "test"],
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/common/shadcn",
+        "main": "packages/common/shadcn/src/index.ts",
+        "tsConfig": "packages/common/shadcn/tsconfig.lib.json",
+        "assets": ["packages/common/shadcn/*.md"]
+      }
+    },
+    "compile": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/dist/{projectRoot}/tsc"],
+      "options": {
+        "command": "tsc --build tsconfig.lib.json",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "format": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "inputs": ["biome"],
+      "options": {
+        "command": "biome format {projectRoot}"
+      },
+      "configurations": {
+        "fix": {
+          "command": "biome format --write {projectRoot}"
+        },
+        "skip-lint": {
+          "command": "node -e \"\""
+        }
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "inputs": ["biome"],
+      "options": {
+        "command": "biome lint {projectRoot}"
+      },
+      "configurations": {
+        "fix": {
+          "command": "biome check --write {projectRoot}"
+        },
+        "skip-lint": {
+          "command": "node -e \"\""
+        }
+      },
+      "dependsOn": ["format"]
+    }
+  }
+}
