@@ -1,0 +1,24 @@
+{
+  "name": "@theory/portfolio-firefly",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/portfolio-firefly/src",
+  "projectType": "application",
+  "targets": {
+    "dev": {
+      "executor": "nx:run-commands",
+      "continuous": true,
+      "options": {
+        "command": "vite",
+        "cwd": "apps/portfolio-firefly"
+      },
+      "dependsOn": ["@theory/portfolio-web:dev"]
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vite build",
+        "cwd": "apps/portfolio-firefly"
+      }
+    }
+  }
+}

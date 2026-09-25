@@ -55,3 +55,6 @@ vitest.config.*.timestamp*
 .nx/polygraph
 # @aws/nx-plugin migration tooling cache
 .grit
+
+# Module Federation generated type stubs
+@mf-types
