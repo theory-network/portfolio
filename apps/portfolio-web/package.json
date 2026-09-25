@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite --port 4200 --strictPort",
     "build": "vite build",
-    "preview": "vite preview --port 4200 --strictPort"
+    "preview": "vite preview --port 4200 --strictPort",
+    "prerender": "node prerender.mjs"
   },
   "dependencies": {
     "@theory/common-shadcn": "*",
@@ -44,6 +45,16 @@
         "executor": "nx:run-commands",
         "options": {
           "command": "vite build",
+          "cwd": "apps/portfolio-web"
+        }
+      },
+      "prerender": {
+        "executor": "nx:run-commands",
+        "dependsOn": [
+          "build"
+        ],
+        "options": {
+          "command": "node prerender.mjs",
           "cwd": "apps/portfolio-web"
         }
       }

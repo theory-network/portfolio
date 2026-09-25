@@ -8,7 +8,7 @@ export function Layout() {
     <div className={styles.app}>
       <header className={styles.header}>
         <div className={styles.headerInner}>
-          <Link to="/" className={styles.brand}>
+          <Link to="/" className={styles.brand} activeOptions={{ exact: true }}>
             <span className={styles.brandMark}>◆</span> Theory Network
           </Link>
           <nav className={styles.nav}>
