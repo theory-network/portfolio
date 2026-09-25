@@ -46,3 +46,10 @@ jobs:
           npx nx affected -t lint test build
           --base=${{ github.event.pull_request.base.sha || github.event.before }}
           --head=${{ github.sha }}
+
+      # Prerender every route with a headless browser and check the saved HTML
+      - run: npx playwright install --with-deps chromium
+      - run: >-
+          npx nx affected -t prerender
+          --base=${{ github.event.pull_request.base.sha || github.event.before }}
+          --head=${{ github.sha }}

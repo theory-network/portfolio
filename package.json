@@ -8,9 +8,10 @@
     "lint": "nx run-many --target lint",
     "test": "nx run-many --target test",
     "prepare": "husky",
-    "portfolio-web-serve": "npx nx dev portfolio-web",
-    "portfolio-web-prod-build": "npx nx build portfolio-web",
-    "portfolio-web-prod-serve": "npx nx preview portfolio-web"
+    "portfolio-serve": "npx nx dev portfolio-web",
+    "portfolio-prod-build": "npx nx build portfolio-web",
+    "portfolio-prod-serve": "npx nx preview portfolio-web",
+    "firefly-portfolio-serve": "npx nx dev portfolio-firefly"
   },
   "private": true,
   "npmScope": "@theory",
