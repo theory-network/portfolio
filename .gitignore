@@ -53,3 +53,5 @@ Thumbs.db
 
 vitest.config.*.timestamp*
 .nx/polygraph
+# @aws/nx-plugin migration tooling cache
+.grit

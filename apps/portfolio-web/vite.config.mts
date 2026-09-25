@@ -1,4 +1,5 @@
 import { federation } from '@module-federation/vite';
+import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 import { defineConfig } from 'vite';
@@ -29,8 +30,10 @@ export default defineConfig({
       shared: {
         react: { singleton: true },
         'react-dom': { singleton: true },
+        '@theory/common-shadcn': { singleton: true },
       },
     }),
     react(),
+    tailwindcss(),
   ],
 });

@@ -1,0 +1,2 @@
+/* Tailwind and the shadcn theme (from @aws/nx-plugin's shadcn library). */
+@import '../../../packages/common/shadcn/src/styles/globals.css';
