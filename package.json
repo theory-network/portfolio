@@ -7,7 +7,10 @@
     "build": "nx run-many --target build",
     "lint": "nx run-many --target lint",
     "test": "nx run-many --target test",
-    "prepare": "husky"
+    "prepare": "husky",
+    "portfolio-web-serve": "npx nx dev portfolio-web",
+    "portfolio-web-prod-build": "npx nx build portfolio-web",
+    "portfolio-web-prod-serve": "npx nx preview portfolio-web"
   },
   "private": true,
   "npmScope": "@theory",
