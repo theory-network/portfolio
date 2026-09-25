@@ -128,11 +128,14 @@ the multi-line body keeps its formatting.
 - **Delete the branch after merging.** The repo's "Automatically delete head
   branches" setting does this.
 - **Prune merged local branches when creating a new branch.** First run
-  `git fetch --prune`. Then find local branches whose remote is gone
-  (`git branch -vv` shows `: gone]`) and confirm each one's PR was merged
-  (`gh pr list --state merged --head <branch>`). Squash and rebase merges
-  aren't detected by `git branch --merged`, so delete them with
-  `git branch -D`. Leave any branch with an open or unmerged PR, no PR, or
-  unpushed commits, and tell the user about it. Never delete the current
-  branch or `main`.
+  `git fetch --prune`. A local branch is safe to delete when its PR was
+  merged and nothing local is unpushed: check
+  `gh pr list --state merged --head <branch> --json number,headRefOid` and
+  make sure the local tip (`git rev-parse <branch>`) equals that
+  `headRefOid`. This covers branches whose remote is gone (`git branch -vv`
+  shows `: gone]`) and branches that never had a remote tracked. Squash and
+  rebase merges aren't detected by `git branch --merged`, so delete with
+  `git branch -D`. Leave any branch with an open or unmerged PR, no PR, or a
+  tip that differs from the PR's head, and tell the user about it. Never
+  delete the current branch or `main`.
 - Don't push, open a PR or merge one unless asked.
