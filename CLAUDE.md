@@ -148,6 +148,14 @@ tool-managed files go in `.prettierignore`. `@aws/nx-plugin` still installs
 Biome and formats the code its generators create with it, so run
 `npx nx format:write --all` after using a generator. Biome is not enforced.
 
+## Prefer generators
+
+Prefer Nx generators and templates (for example `@nx/react:provider`, or the
+ones `@aws/nx-plugin` offers) over hand-written config. Only hand-write or
+adapt config when no generator does the job, and note afterwards what was
+changed from the generated output (for example a renamed target or a scoped
+project name), so it's clear what to redo if the generator is rerun.
+
 ## Capturing technology decision patterns
 
 While working, watch for the user making a technology, tooling or process
