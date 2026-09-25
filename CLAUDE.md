@@ -38,6 +38,7 @@ issues from it, even though the site links to Nexus (5.3 uses its
 screenshots).
 
 Algorithm:
+
 1. **Check for an In Progress issue first, project-wide.** If exactly one
    exists, that's "what's next" — finishing started work outranks an
    untouched item in an earlier epic, even one with a lower number. (If
