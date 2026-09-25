@@ -4,7 +4,7 @@ import { Badge } from './Badge';
 describe('Badge', () => {
   it('renders its label', () => {
     render(<Badge label="Theory Network" />);
-    expect(screen.getByText('Theory Network')).toBeTruthy();
+    expect(screen.getByText('This text is not rendered')).toBeTruthy();
   });
 
   it('renders the count only when one is given', () => {
